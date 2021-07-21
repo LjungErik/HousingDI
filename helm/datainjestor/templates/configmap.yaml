@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: injestor-config
+  namespace: {{ .Release.Namespace }}
+data:
+  config.yml: |
+    verbose: {{ .Values.verbose }}
+    {{ if .Values.prometheus.remotewrite.url }}
+    prometheus:
+      url: {{ .Values.prometheus.remotewrite.url }}
+    {{ end }}

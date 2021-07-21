@@ -1,0 +1,22 @@
+version: "3.9"
+services:
+    injestor:
+        build: .
+        volumes:
+            - ./private-compose-config.yml:/etc/datainjestor/config.yml
+        environment:
+            - DATAINJESTOR_CONFIG_FILE=/etc/datainjestor/config.yml
+            - CONFIGOR_SQL_CONNECTION=postgresql://postgres:Password123@sql/postgres
+        depends_on: 
+            - sql
+        restart: on-failure
+    sql:
+        image: postgres:9.6.22
+        environment: 
+            - POSTGRES_PASSWORD=Password123
+            - PGDATA=/var/lib/postgresql/data/pgdata
+        volumes:
+            - sqldata:/var/lib/postgresql/data/pgdata
+            - ./db-scripts/initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
+volumes:
+    sqldata: {}

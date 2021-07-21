@@ -1,0 +1,7 @@
+verbose: false
+
+prometheus:
+  url: "http://localhost:8080"
+
+sql:
+  connection: "Server=127.0.0.1;Port=5432;Database=myDataBase;Uid=myUsername;Pwd=myPassword;"

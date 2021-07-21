@@ -1,0 +1,9 @@
+# bin folder for built images
+bin/
+
+# config files
+config.yml
+
+# git files and folders
+.git/
+.gitignore

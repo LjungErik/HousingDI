@@ -1,0 +1,20 @@
+
+verbose: false
+
+replicaCount: 1
+appName: datainjestor
+
+image:
+  repository: "developdockerstate/zetrarepo"
+  tag: "datainjestor-latest"
+  pullPolicy: IfNotPresent
+
+port: 9090
+
+sql:
+  secret: sql-secret
+  key: connection
+
+prometheus:
+  remotewrite:
+    url: ""
