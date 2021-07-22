@@ -12,11 +12,11 @@ type Config struct {
 	Verbose bool `default:"false"`
 	Port    uint `default:"9090"`
 
-	Prometheus struct {
-		URL string
+	SQL struct {
+		Connection string
 	}
 
-	SQL struct {
+	MongoDB struct {
 		Connection string
 	}
 }

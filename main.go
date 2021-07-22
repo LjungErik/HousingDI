@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/LjungErik/datainjestor/lib/config"
+	"github.com/LjungErik/datainjestor/mongodb"
 	"github.com/LjungErik/datainjestor/web"
 
 	"github.com/LjungErik/datainjestor/sql"
@@ -53,9 +54,27 @@ func initializeSqlClient(cfg *config.Config) *sql.Client {
 	return sqlclient
 }
 
+func initializeMongoDbClient(cfg *config.Config) *mongodb.Client {
+
+	if len(cfg.MongoDB.Connection) == 0 {
+		log.Error("Missing connection string cannot create sql client")
+		panic(errors.New("Missing connection string for mongodb"))
+	}
+
+	log.Info("MongoDB database: ENABLED")
+	mongoCfg := mongodb.Config{
+		ConnString: cfg.MongoDB.Connection,
+	}
+
+	client := mongodb.NewClient(&mongoCfg)
+
+	return client
+}
+
 func initializeWebConfig(cfg *config.Config) *web.Config {
 	sqlclient := initializeSqlClient(cfg)
-	wcfg := web.NewConfig(sqlclient)
+	mongoclient := initializeMongoDbClient(cfg)
+	wcfg := web.NewConfig(sqlclient, mongoclient)
 	return wcfg
 }
 

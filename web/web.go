@@ -2,6 +2,7 @@ package web
 
 import (
 	"github.com/LjungErik/datainjestor/lib/encoding"
+	"github.com/LjungErik/datainjestor/mongodb"
 	"github.com/LjungErik/datainjestor/sql"
 	"github.com/julienschmidt/httprouter"
 )
@@ -9,18 +10,20 @@ import (
 // Config config for handling clients
 type Config struct {
 	sql     *sql.Client
+	mongo   *mongodb.Client
 	decoder encoding.IDecoder
 }
 
 // NewConfig Generates a new webconfig with the provided metric clients
-func NewConfig(c *sql.Client) *Config {
+func NewConfig(sqlclient *sql.Client, mongoclient *mongodb.Client) *Config {
 	d, err := encoding.NewDecoder(encoding.EncodingCSV)
 	if err != nil {
 		// handle error when decoder can not be created
 	}
 
 	return &Config{
-		sql:     c,
+		sql:     sqlclient,
+		mongo:   mongoclient,
 		decoder: d,
 	}
 }
