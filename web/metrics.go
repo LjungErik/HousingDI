@@ -30,7 +30,7 @@ func (wc *Config) writeHousingForSale(w http.ResponseWriter, r *http.Request, ps
 		Data:         b,
 	}
 
-	_, err = model.ParseHousingForSale(&hr, wc.decoder)
+	mod, err := model.ParseHousingForSale(&hr, wc.decoder)
 	if err != nil {
 		log.Error("Failed to parse housing for sale data ")
 		http.Error(w, "Cannot parse Housing For Sale data", http.StatusBadRequest)
@@ -38,6 +38,14 @@ func (wc *Config) writeHousingForSale(w http.ResponseWriter, r *http.Request, ps
 	}
 
 	//Do something with the for sale housing data
+	doc := mod.ToMongoDbDoc()
+
+	err = wc.mongo.InsertOrUpdateHousingForSale(doc)
+	if err != nil {
+		log.Error("Failed to insert housing for sale in database")
+		http.Error(w, "Failed to persist data", http.StatusBadRequest)
+		return
+	}
 
 	w.WriteHeader(http.StatusNoContent)
 }
@@ -63,14 +71,21 @@ func (wc *Config) writeHousingSold(w http.ResponseWriter, r *http.Request, ps ht
 		Data:         b,
 	}
 
-	_, err = model.ParseHousingSold(&hr, wc.decoder)
+	mod, err := model.ParseHousingSold(&hr, wc.decoder)
 	if err != nil {
 		log.Error("Failed to parse housing sold data ")
 		http.Error(w, "Cannot parse Housing Sold data", http.StatusBadRequest)
 		return
 	}
 
-	//Do something with the sold housing data
+	doc := mod.ToMongoDbDoc()
+
+	err = wc.mongo.InsertOrUpdateHousingSold(doc)
+	if err != nil {
+		log.Error("Failed to insert housing sold in database")
+		http.Error(w, "Failed to persist data", http.StatusBadRequest)
+		return
+	}
 
 	w.WriteHeader(http.StatusNoContent)
 }

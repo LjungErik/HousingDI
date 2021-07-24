@@ -2,6 +2,7 @@ package model
 
 import (
 	"github.com/LjungErik/datainjestor/lib/encoding"
+	"github.com/LjungErik/datainjestor/mongodb"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -107,4 +108,64 @@ func ParseHousingSold(req *HousingSoldRequest, decoder encoding.IDecoder) (*Hous
 	}
 
 	return &m, nil
+}
+
+func (m *HousingForSale) ToMongoDbDoc() mongodb.HousingForSaleDoc {
+	return mongodb.HousingForSaleDoc{
+		PropId:            m.PropId,
+		Address:           m.Address,
+		Area:              m.Area,
+		City:              m.City,
+		AskPrice:          m.AskPrice,
+		AccommodationType: m.AccommodationType,
+		FormOfTenure:      m.FormOfTenure,
+		NumberOfRooms:     m.NumberOfRooms,
+		LivingSpace:       mongodb.WithUnits(m.LivingSpace),
+		GrossFloorArea:    mongodb.WithUnits(m.GrossFloorArea),
+		PlotSize:          mongodb.WithUnits(m.PlotSize),
+		Balcony:           m.Balcony,
+		Patio:             m.Patio,
+		Floor:             m.Floor,
+		ConstructionYear:  m.ConstructionYear,
+		HousingSociety:    m.HousingSociety,
+		LivingFee:         m.LivingFee,
+		OperatingCost:     m.OperatingCost,
+		PlotFee:           m.PlotFee,
+		AreaLease:         m.AreaLease,
+		PricePerSqm:       m.PricePerSqm,
+		NumberOfVisits:    m.NumberOfVisits,
+		DaysOnHemnet:      m.DaysOnHemnet,
+		Broker:            mongodb.Broker(m.Broker),
+	}
+}
+
+func (m *HousingSold) ToMongoDbDoc() mongodb.HousingSoldDoc {
+	return mongodb.HousingSoldDoc{
+		PropId:            m.PropId,
+		Address:           m.Address,
+		Area:              m.Area,
+		City:              m.City,
+		SaleDate:          m.SaleDate,
+		SalePrice:         m.SalePrice,
+		AskPrice:          m.AskPrice,
+		AccommodationType: m.AccommodationType,
+		FormOfTenure:      m.FormOfTenure,
+		NumberOfRooms:     m.NumberOfRooms,
+		LivingSpace:       mongodb.WithUnits(m.LivingSpace),
+		GrossFloorArea:    mongodb.WithUnits(m.GrossFloorArea),
+		PlotSize:          mongodb.WithUnits(m.PlotSize),
+		Balcony:           m.Balcony,
+		Patio:             m.Patio,
+		Floor:             m.Floor,
+		ConstructionYear:  m.ConstructionYear,
+		HousingSociety:    m.HousingSociety,
+		LivingFee:         m.LivingFee,
+		OperatingCost:     m.OperatingCost,
+		PlotFee:           m.PlotFee,
+		AreaLease:         m.AreaLease,
+		PricePerSqm:       m.PricePerSqm,
+		NumberOfVisits:    m.NumberOfVisits,
+		DaysOnHemnet:      m.DaysOnHemnet,
+		Broker:            mongodb.Broker(m.Broker),
+	}
 }
