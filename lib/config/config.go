@@ -17,7 +17,8 @@ type Config struct {
 	}
 
 	MongoDB struct {
-		Connection string
+		Connection   string
+		DatabaseName string
 	}
 }
 

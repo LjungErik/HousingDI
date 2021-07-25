@@ -96,21 +96,23 @@ func ParseHousingSold(req *HousingSoldRequest, decoder encoding.IDecoder) (*Hous
 		return nil, err
 	}
 
-	pe := newParsingErrors()
-	longTime := m.SaleDate + " 00:00:00 " + req.TimeLocation
-	m.SaleDate = parseInLocation(longTime, req.TimeLocation, "soldDate", pe)
+	if len(m.SaleDate) > 0 {
+		pe := newParsingErrors()
+		longTime := m.SaleDate + " 00:00:00 " + req.TimeLocation
+		m.SaleDate = parseInLocation(longTime, req.TimeLocation, "soldDate", pe)
 
-	if pe.Error() != nil {
-		log.WithFields(log.Fields{
-			"SoldDateTime": longTime,
-		}).Warn("Failed to convert sold date to utc timestamp")
-		return nil, pe.Error()
+		if pe.Error() != nil {
+			log.WithFields(log.Fields{
+				"SoldDateTime": longTime,
+			}).Warn("Failed to convert sold date to utc timestamp")
+			return nil, pe.Error()
+		}
 	}
 
 	return &m, nil
 }
 
-func (m *HousingForSale) ToMongoDbDoc() mongodb.HousingForSaleDoc {
+func (m *HousingForSale) ToMongoDoc() mongodb.HousingForSaleDoc {
 	return mongodb.HousingForSaleDoc{
 		PropId:            m.PropId,
 		Address:           m.Address,
@@ -139,7 +141,7 @@ func (m *HousingForSale) ToMongoDbDoc() mongodb.HousingForSaleDoc {
 	}
 }
 
-func (m *HousingSold) ToMongoDbDoc() mongodb.HousingSoldDoc {
+func (m *HousingSold) ToMongoDoc() mongodb.HousingSoldDoc {
 	return mongodb.HousingSoldDoc{
 		PropId:            m.PropId,
 		Address:           m.Address,

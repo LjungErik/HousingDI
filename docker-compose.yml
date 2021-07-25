@@ -5,10 +5,15 @@ services:
         volumes:
             - ./private-compose-config.yml:/etc/datainjestor/config.yml
         environment:
+            - DATAINJESTOR_VERBOSE_LOGGING=1
             - DATAINJESTOR_CONFIG_FILE=/etc/datainjestor/config.yml
             - CONFIGOR_SQL_CONNECTION=postgresql://postgres:Password123@sql/postgres
+            - CONFIGOR_MONGODB_CONNECTION=mongodb://mongo:Password123@mongo:27017
+            - CONFIGOR_MONGODB_DATABASENAME=housing
         depends_on: 
             - sql
+        ports:
+            - 9090:9090
         restart: on-failure
     sql:
         image: postgres:9.6.22
@@ -18,5 +23,11 @@ services:
         volumes:
             - sqldata:/var/lib/postgresql/data/pgdata
             - ./db-scripts/initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
+    mongo:
+        image: mongo
+        restart: always
+        environment:
+            - MONGO_INITDB_ROOT_USERNAME=mongo
+            - MONGO_INITDB_ROOT_PASSWORD=Password123
 volumes:
     sqldata: {}

@@ -20,13 +20,12 @@ type Config struct {
 type Client struct {
 	session *mongo.Client
 	db      *mongo.Database
-	ctx     context.Context
-	cancel  context.CancelFunc
 }
 
 func NewClient(conf *Config) *Client {
 	clientOptions := options.Client().ApplyURI(conf.ConnString)
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
+	defer cancel()
 
 	session, err := mongo.NewClient(clientOptions)
 
@@ -53,8 +52,6 @@ func NewClient(conf *Config) *Client {
 	return &Client{
 		session: session,
 		db:      db,
-		ctx:     ctx,
-		cancel:  cancel,
 	}
 }
 
@@ -63,21 +60,21 @@ func (c *Client) Disconnect() {
 }
 
 func (c *Client) InsertOrUpdateHousingForSale(doc HousingForSaleDoc) error {
-	update, err := bson.Marshal(doc)
-	if err != nil {
-		log.Warn("Failed to marshal HousingForSaleDoc")
-		return err
-	}
-
 	coll := c.db.Collection("housingforsale")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
+	defer cancel()
 
 	opts := options.Update().SetUpsert(true)
 	filter := bson.D{primitive.E{
 		Key:   "propId",
 		Value: doc.PropId,
 	}}
+	update := bson.M{
+		"$set": doc,
+	}
 	// Fire and forget until further
-	_, err = coll.UpdateOne(c.ctx, filter, update, opts)
+	_, err := coll.UpdateOne(ctx, filter, update, opts)
 	if err != nil {
 		log.Warnf("Failed to update/insert housing 'for sale' document for: %v", doc.PropId)
 		return err
@@ -87,21 +84,21 @@ func (c *Client) InsertOrUpdateHousingForSale(doc HousingForSaleDoc) error {
 }
 
 func (c *Client) InsertOrUpdateHousingSold(doc HousingSoldDoc) error {
-	update, err := bson.Marshal(doc)
-	if err != nil {
-		log.Warn("Failed to marshal HousingSoldDoc")
-		return err
-	}
-
 	coll := c.db.Collection("housingsold")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
+	defer cancel()
 
 	opts := options.Update().SetUpsert(true)
 	filter := bson.D{primitive.E{
 		Key:   "propId",
 		Value: doc.PropId,
 	}}
+	update := bson.M{
+		"$set": doc,
+	}
 	// Fire and forget until further
-	_, err = coll.UpdateOne(c.ctx, filter, update, opts)
+	_, err := coll.UpdateOne(ctx, filter, update, opts)
 	if err != nil {
 		log.Warnf("Failed to update/insert housing 'sold' document for: %v", doc.PropId)
 		return err

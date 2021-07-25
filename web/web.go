@@ -16,7 +16,7 @@ type Config struct {
 
 // NewConfig Generates a new webconfig with the provided metric clients
 func NewConfig(sqlclient *sql.Client, mongoclient *mongodb.Client) *Config {
-	d, err := encoding.NewDecoder(encoding.EncodingCSV)
+	d, err := encoding.NewDecoder(encoding.EncodingJSON)
 	if err != nil {
 		// handle error when decoder can not be created
 	}

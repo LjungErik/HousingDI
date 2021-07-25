@@ -63,7 +63,8 @@ func initializeMongoDbClient(cfg *config.Config) *mongodb.Client {
 
 	log.Info("MongoDB database: ENABLED")
 	mongoCfg := mongodb.Config{
-		ConnString: cfg.MongoDB.Connection,
+		ConnString:   cfg.MongoDB.Connection,
+		DatabaseName: cfg.MongoDB.DatabaseName,
 	}
 
 	client := mongodb.NewClient(&mongoCfg)
