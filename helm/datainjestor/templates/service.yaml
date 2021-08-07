@@ -5,7 +5,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   selector:
-    app:  datainjestor
+    app:  {{ .Values.appName }}
   ports:
     - protocol: TCP
       port: 80

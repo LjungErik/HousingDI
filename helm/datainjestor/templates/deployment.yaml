@@ -20,7 +20,7 @@ spec:
         app: {{ .Values.appName }}
     spec:
       containers:
-        - name: {{ .Chart.Name }}
+        - name: datainjestor
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
@@ -34,6 +34,16 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.sql.secret }}
                   key: {{ .Values.sql.key }} 
+            - name: CONFIGOR_MONGODB_CONNECTION
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.mongodb.secret }}
+                  key: connection
+            - name: CONFIGOR_MONGODB_DATABASENAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.mongodb.secret }}
+                  key: database
           readinessProbe:
             httpGet:
               path: /health/ready
