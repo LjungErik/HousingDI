@@ -1,8 +1,7 @@
 #!/bin/bash
 
 user="developdockerstate"
-repo="zetrarepo"
-name="datainjestor"
+name="housing-datainjestor"
 version="local"
 latest=false
 
@@ -38,14 +37,14 @@ if [ $version == "local" ]; then
     exit 1
 fi
 
-docker_image="$user/$repo"
+docker_image="$user/$name"
 
 echo "Building docker image..."
-docker build -t $docker_image:$name-$version .
+docker build -t $docker_image:$version .
 
 if [ $? -eq 0 ]; then
     echo "Pushing docker image..."
-    docker push $docker_image:$name-$version
+    docker push $docker_image:$version
     if [ $? -ne 0 ]; then
         echo "Failed to push docker image"
         exit 1
@@ -53,9 +52,9 @@ if [ $? -eq 0 ]; then
 
     if [ $latest ]; then
         echo "Adding latest tag..."
-        docker tag $docker_image:$name-$version $docker_image:$name-latest
+        docker tag $docker_image:$version $docker_image:latest
         echo "Pushing docker image as latest..."
-        docker push $docker_image:$name-latest
+        docker push $docker_image:latest
     fi
 else
     echo "Failed to build image"

@@ -1,9 +1,9 @@
-FROM --platform=${BUILDPLATFORM} golang:1.15.5-alpine as base
+FROM golang:1.15.5-alpine as base
 WORKDIR /src
 RUN apk add build-base
-COPY go.* .
+COPY go.* ./
 RUN go mod download
-COPY . .
+COPY . ./
 
 FROM base as build
 RUN GOOS=linux GOARCH=amd64 go build -o /out/datainjestor .
