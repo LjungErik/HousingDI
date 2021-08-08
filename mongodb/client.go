@@ -40,12 +40,6 @@ func NewClient(conf *Config) *Client {
 		panic(err)
 	}
 
-	err = session.Ping(ctx, nil)
-	if err != nil {
-		log.Error("Failed to ping MongoDB")
-		panic(err)
-	}
-
 	db := session.Database(conf.DatabaseName)
 	log.Infof("Successfully connected to database: %v", conf.DatabaseName)
 

@@ -5,8 +5,8 @@ replicaCount: 1
 appName: datainjestor
 
 image:
-  repository: "developdockerstate/zetrarepo"
-  tag: "datainjestor-latest"
+  repository: "developdockerstate/housing-datainjestor"
+  tag: "latest"
   pullPolicy: IfNotPresent
 
 port: 9090
