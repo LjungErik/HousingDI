@@ -8,7 +8,7 @@ services:
             - DATAINJESTOR_VERBOSE_LOGGING=1
             - DATAINJESTOR_CONFIG_FILE=/etc/datainjestor/config.yml
             - CONFIGOR_SQL_CONNECTION=postgresql://postgres:Password123@sql/postgres
-            - CONFIGOR_MONGODB_CONNECTION=mongodb://mongo:Password123@mongo:27017
+            - CONFIGOR_MONGODB_CONNECTION=mongodb://mongo:Password123@mongo:27017?authSource=admin
             - CONFIGOR_MONGODB_DATABASENAME=housing
         depends_on: 
             - sql

@@ -10,6 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
 type Config struct {
@@ -40,6 +41,12 @@ func NewClient(conf *Config) *Client {
 		panic(err)
 	}
 
+	err = client.Ping(ctx, readpref.Primary())
+	if err != nil {
+		log.Fatal("Failed to ping MongoDB server")
+		panic(err)
+	}
+
 	db := session.Database(conf.DatabaseName)
 	log.Infof("Successfully connected to database: %v", conf.DatabaseName)
 
@@ -50,7 +57,7 @@ func NewClient(conf *Config) *Client {
 }
 
 func (c *Client) Disconnect() {
-
+	defer c.session.Disconnect()
 }
 
 func (c *Client) InsertOrUpdateHousingForSale(doc HousingForSaleDoc) error {
