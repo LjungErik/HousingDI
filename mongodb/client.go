@@ -41,7 +41,7 @@ func NewClient(conf *Config) *Client {
 		panic(err)
 	}
 
-	err = client.Ping(ctx, readpref.Primary())
+	err = session.Ping(ctx, readpref.Primary())
 	if err != nil {
 		log.Fatal("Failed to ping MongoDB server")
 		panic(err)
@@ -57,7 +57,10 @@ func NewClient(conf *Config) *Client {
 }
 
 func (c *Client) Disconnect() {
-	defer c.session.Disconnect()
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
+	defer cancel()
+
+	c.session.Disconnect(ctx)
 }
 
 func (c *Client) InsertOrUpdateHousingForSale(doc HousingForSaleDoc) error {
