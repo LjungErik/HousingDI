@@ -65,6 +65,7 @@ func (wc *Config) writeHousingSold(w http.ResponseWriter, r *http.Request, ps ht
 	b, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		log.Error("Failed to read body")
+		log.Error(err)
 		http.Error(w, "Cannot read body", http.StatusBadRequest)
 		return
 	}
@@ -77,6 +78,7 @@ func (wc *Config) writeHousingSold(w http.ResponseWriter, r *http.Request, ps ht
 	mod, err := model.ParseHousingSold(&hr, wc.decoder)
 	if err != nil {
 		log.Error("Failed to parse housing sold data ")
+		log.Error(err)
 		http.Error(w, "Cannot parse Housing Sold data", http.StatusBadRequest)
 		return
 	}
@@ -86,6 +88,7 @@ func (wc *Config) writeHousingSold(w http.ResponseWriter, r *http.Request, ps ht
 	err = wc.mongo.InsertOrUpdateHousingSold(doc)
 	if err != nil {
 		log.Error("Failed to insert housing sold in database")
+		log.Error(err)
 		http.Error(w, "Failed to persist data", http.StatusBadRequest)
 		return
 	}
