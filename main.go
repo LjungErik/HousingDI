@@ -90,6 +90,7 @@ func main() {
 
 	wcfg := initializeWebConfig(cfg)
 	router := wcfg.InitRouter()
+	defer wcfg.Dispose()
 
 	log.Infof("Starting up server at :9090")
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":9090"), router))

@@ -28,6 +28,11 @@ func NewConfig(sqlclient *sql.Client, mongoclient *mongodb.Client) *Config {
 	}
 }
 
+func (wc *Config) Dispose() {
+	wc.sql.Disconnect()
+	wc.mongo.Disconnect()
+}
+
 // InitRouter Initializes router for the web config
 func (wc *Config) InitRouter() *httprouter.Router {
 	router := httprouter.New()
